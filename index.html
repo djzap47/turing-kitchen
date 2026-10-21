@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f6f5f1">
+  <meta name="description" content="Make pancakes, brew tea, and build a sandwich while exploring how a real Turing machine follows rules.">
+  <title>Turing Kitchen — Little rules. Delicious results.</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="kitchen.css">
+  <script src="recipes.js" defer></script>
+  <script src="engine.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#workspace">Skip to simulator</a>
+<header class="topbar">
+  <a class="brand" href="#" aria-label="Turing Studio home"><span class="brand-icon">t<span>•</span></span><strong>turing<span>kitchen</span></strong><span class="lab-label">THE RECIPE LAB</span></a>
+  <nav aria-label="Main"><a href="#workspace" class="nav-active">Playground</a><a href="#learn">How it works <span aria-hidden="true">↗</span></a><button id="share" class="text-button">Share setup <span aria-hidden="true">↗</span></button></nav>
+</header>
+<main>
+  <section class="intro">
+    <div><p class="eyebrow"><span class="live-dot"></span> COMPUTER SCIENCE, FRESH FROM THE KITCHEN</p><h1>Little rules.<br><em>Delicious results.</em></h1><p class="intro-copy">Make breakfast. Brew a cup. Build your lunch.<br>Discover how a Turing machine works, one kitchen step at a time.</p></div>
+    <div class="intro-aside kitchen-hero" aria-hidden="true"><span class="hero-dish">🥞</span><span class="recipe-stamp">TODAY’S SPECIAL<br><strong>A taste of computing</strong></span><span class="intro-caption">READ THE RECIPE. FOLLOW THE RULES.</span></div>
+  </section>
+
+  <section id="workspace" class="workspace" aria-label="Turing machine playground">
+    <aside class="library">
+      <div class="section-label">01 / PICK A RECIPE</div><h2>On the menu</h2><p class="muted small">Three recipes. One rule-following chef.</p>
+      <div id="machine-list" class="machine-list"></div>
+      <div class="library-note"><span class="note-icon">↳</span><p><strong>Start small. Think big.</strong><br>Try a single step first. The highlighted rule explains exactly what happens next.</p></div>
+      <div class="legend"><span><i class="legend-cell"></i> Ingredient / tape symbol</span><span><i class="legend-head"></i> Read / write head</span><span><code>□</code> Blank cell</span></div>
+    </aside>
+
+    <div class="simulation">
+      <div class="machine-heading"><div><div class="section-label">02 / LET’S MAKE SOMETHING</div><h2 id="machine-name"></h2></div><span class="badge" id="status">Ready</span></div>
+      <p id="machine-description" class="muted description"></p>
+      <div id="ingredient-palette" class="ingredient-palette" aria-label="Add ingredients to your input"></div><form id="input-form" class="input-form"><label for="tape-input">Your ingredient order <span id="alphabet"></span></label><div class="input-row"><input id="tape-input" maxlength="64" spellcheck="false" autocomplete="off" aria-describedby="input-error input-hint"><button type="submit" class="button apply">Load input <span aria-hidden="true">↵</span></button></div><p id="input-error" class="error" role="alert"></p><p id="input-hint" class="input-hint">Tap ingredients to add them, or type their letters. Load input starts a fresh recipe.</p></form>
+      <div class="examples"><span>TRY</span><div id="examples"></div></div>
+
+      <div class="kitchen-scene" id="kitchen-scene"></div><div id="symbol-key" class="symbol-key"></div><div class="tape-panel">
+        <div class="tape-meta"><span>THE KITCHEN TAPE <span class="infinite">← unbounded →</span></span><span id="head-position">HEAD @ 0</span></div>
+        <div class="tape-window" id="tape-window"><div class="tape-rail" id="tape-rail"></div></div>
+        <div class="tape-bottom"><span><span class="head-triangle">▲</span> <span id="head-caption">READ / WRITE HEAD</span></span><div class="tape-nav"><button id="tape-left" title="View cells to the left" aria-label="View cells to the left">←</button><button id="follow-head" title="Center the read/write head">Follow head</button><button id="tape-right" title="View cells to the right" aria-label="View cells to the right">→</button></div></div>
+      </div>
+
+      <div class="controls"><div class="transport"><button id="back" class="button icon-button" title="Undo one transition (Left arrow)" aria-label="Back one step">↶</button><button id="step" class="button">Step <span aria-hidden="true">→</span></button><button id="run" class="button primary"><span aria-hidden="true">▶</span> Run</button><button id="reset" class="button icon-button" title="Reset to loaded input (R)" aria-label="Reset machine">↺</button></div><label class="speed-label" for="speed">SPEED<select id="speed"><option value="1400">Slow</option><option value="650" selected>Normal</option><option value="150">Fast</option></select></label></div>
+      <div class="metrics"><div><span>CURRENT STATE</span><strong id="state-value"></strong><small id="state-label"></small></div><div><span>STEPS TAKEN</span><strong id="step-count">0</strong><small>one rule per step</small></div><div><span>CELLS VISITED</span><strong id="cell-count">1</strong><small>memory explored</small></div></div>
+      <div class="narration" id="narration" aria-live="polite" aria-atomic="true"><span class="narration-icon" aria-hidden="true">✦</span><div><span class="section-label" id="narration-label">WHAT HAPPENS NEXT</span><p id="narration-text"></p></div></div>
+      <div id="halt-result" class="halt-result" hidden role="status"></div>
+
+      <section class="graph-section"><div class="subheading"><h3>Follow the recipe</h3><span>THE CHEF’S CURRENT JOB</span></div><div id="state-graph" class="state-graph"></div><p class="small muted" id="graph-caption"></p></section>
+      <details class="prediction"><summary><span>✧ Predict the next move</span><span class="small">TEST YOUR INTUITION</span></summary><p id="prediction-question"></p><div class="prediction-options"><button class="button" data-predict="L">← Left</button><button class="button" data-predict="R">Right →</button></div><p id="prediction-feedback" aria-live="polite"></p></details>
+    </div>
+
+    <aside class="inspector"><div class="section-label">03 / LOOK UNDER THE HOOD</div><div class="subheading"><h2>The rulebook</h2><span id="rule-count" class="count-pill"></span></div><p class="small muted">Find the chef’s job and the ingredient.<br>Update the cell, move, and follow the next job.</p><div class="active-rule"><span class="section-label">NEXT TRANSITION</span><code id="next-rule"></code></div><div class="rule-table-scroll"><table><caption class="sr-only">Transition rules; the next rule is highlighted</caption><thead><tr><th scope="col">Job</th><th scope="col">See</th><th scope="col">Leave</th><th scope="col">Move</th><th scope="col">Next job</th></tr></thead><tbody id="rules"></tbody></table></div><p class="table-key"><span class="key-dot"></span> Next rule <span class="last-rule-dot"></span> Last used <span>← L / R →</span></p><div class="history-heading"><h3>Execution log</h3><button id="export" class="text-button small" title="Download the complete transition trace">Export ↓</button></div><ol id="history" class="history" reversed></ol><div class="inspector-footer">Deterministic by design.<br>Same input + same rules = same run.</div></aside>
+  </section>
+  <div class="workspace-footer"><span><kbd>→</kbd> Step <kbd>←</kbd> Back <kbd>Space</kbd> Run / pause <kbd>R</kbd> Reset</span><span>Built to explore. No sign-in. No setup.</span></div>
+
+  <section id="learn" class="learn"><p class="model-note">These are symbolic kitchen stories, not cooking timers. Each icon represents one tape symbol; “cook” or “steep” is a rule that changes that symbol. The recipes simplify real cooking to make computation visible.</p><div class="learn-heading"><div><p class="eyebrow">SMALL RULES, BIG IDEAS</p><h2>What makes it a Turing machine?</h2></div><p>A model of computation introduced by Alan Turing in 1936.<br>Not a modern processor, but a way to ask what any computer can compute.</p></div><div class="learn-grid"><article><span class="learn-number">01</span><h3>A tape to remember</h3><p>Each cell stores one symbol. The tape is conceptually unbounded; our view follows the head and creates blank cells as needed. <code>□</code> means blank, not zero.</p></article><article><span class="learn-number">02</span><h3>A head to act</h3><p>The head reads one cell, writes a symbol, and moves left or right. Each click of Step applies exactly one transition from the rulebook.</p></article><article><span class="learn-number">03</span><h3>A state to decide</h3><p>The current state and the symbol under the head select the next rule. The state graph shows the finite control; the visible rules drive every kitchen action.</p></article><article><span class="learn-number">04</span><h3>A reason to stop</h3><p>A terminal state accepts or rejects. A missing rule halts as stuck. Pause only stops playback. Our 10,000-step playback cap is a practical limit, not a proof of non-halting.</p></article></div><details class="formal"><summary>For the curious: the computer science underneath <span>+</span></summary><p><code>M = (Q, Σ, Γ, δ, q₀, q_accept, q_reject)</code></p><p>Q is the finite set of states. Σ is the input alphabet. Γ is the tape alphabet, including □ and completed-ingredient markers such as G and P. q₀ is the initial state. δ maps a nonterminal state and a read symbol to a new state, a written symbol, and a direction: <code>δ(q, s) = (q′, s′, d)</code>.</p><p>This simulator uses a deterministic, single-tape model with tape cells indexed by all integers and moves L or R. The pancake program transforms batter markers into ready-pancake markers. Tea and sandwich programs check ingredient order while recording preparation steps. Successful runs reach serve; invalid orders reach stop. Terminal states have no outgoing rules. The visible tape is a finite window; real computers have finite memory.</p><p>A state graph edge can represent several rules. The table contains the full symbol-by-symbol definition. Rewind is a debugger feature backed by recorded history, not an extra operation of the mathematical machine.</p><p>Further reading: <a href="https://plato.stanford.edu/entries/turing-machine/" target="_blank" rel="noreferrer">Stanford Encyclopedia of Philosophy: Turing Machines ↗</a></p></details></section>
+</main>
+<footer class="page-footer"><a class="brand" href="#"><span class="brand-icon">t<span>•</span></span><strong>turing<span>kitchen</span></strong></a><p>Designed for curious minds.<br><span>Yevhen Protasov · 36020 · Computer Architecture · Lab 03</span></p><span class="footer-tag">READ. WRITE. BON APPÉTIT.</span></footer>
+<div id="toast" role="status" class="toast" hidden></div>
+<noscript><div class="noscript">Please enable JavaScript to run the interactive Turing machine. The explanation below remains readable.</div></noscript>
+</body>
+</html>
